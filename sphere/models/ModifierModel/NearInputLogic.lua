@@ -43,20 +43,24 @@ NearInputLogic.receive = function(self, config, event)
 		if key == noteHandler.keyBind then
 			self:getLatestAccessibleNote(noteHandler)
 			local nearestNote = self:getNearestNote(noteHandler, currentTime)
-			local lastNote = noteHandler.lastNote
+			local previousNote = noteHandler.previousNote
 
 			if not nearestNote then return end
 
-			if lastNote.noteClass == "LongLogicalNote" then
-				if lastNote:getNoteTime("end") > currentTime then
-					nearestNote = lastNote
-				else
-					lastNote:receive(event)
-				end
-			end
+			-- check if a long note has ended
+			if previousNote.noteClass == "LongLogicalNote" then
+				if previousNote:getNoteTime("end") > currentTime then -- if not, then this long note is close
+					nearestNote = previousNote
+				else-- if it's over, we still send the event. Otherwise, long note will not get 'keyreleased'
+					-- and the end of the long note will be missed
+					if previousNote.state == "startPassedPressed" then
+						previousNote:receive(event)
+					end
+				end				
+			end	
 
-			noteHandler.lastNote = nearestNote
-			nearestNote:receive(event)
+			noteHandler.previousNote = nearestNote 
+			nearestNote:receive(event)	
 			break
 		end
 	end

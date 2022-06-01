@@ -54,7 +54,7 @@ NoteHandler.loadNoteData = function(self)
 		self.noteCount = #self.noteData
 		self.keyBind = self.inputType .. self.inputIndex
 		self.latestAccessibleNote = self.noteData[1]
-		self.lastNote = self.noteData[1]
+		self.previousNote = self.noteData[1]
 	end
 	
 	self.currentNote = self.noteData[1]
