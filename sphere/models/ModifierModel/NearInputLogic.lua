@@ -73,7 +73,7 @@ NearInputLogic.getNearestNote = function(self, noteHandler, currentTime)
 
 	for i = startIndex, noteHandler.noteCount, 1 do -- looking for an early note
 		local note = noteHandler.noteData[i]
-		if note:getNoteTime() > currentTime and note.ended == false then
+		if note:getNoteTime() > currentTime and note.ended ~= true then
 			earlyNote = note
 			break
 		end
@@ -87,7 +87,7 @@ NearInputLogic.getNearestNote = function(self, noteHandler, currentTime)
 
 	for i = startIndex, 1, -1 do -- looking for a late note before an early one
 		local note = noteHandler.noteData[i]
-		if note.ended == false then
+		if note.ended ~= true then
 			lateNote = note
 		else
 			break
@@ -115,7 +115,7 @@ end
 
 NearInputLogic.getLatestAccessibleNote = function(self, noteHandler)
 	for i = noteHandler.latestAccessibleNote.index, noteHandler.noteCount, 1 do
-		if noteHandler.noteData[i].ended == false then
+		if noteHandler.noteData[i].ended ~= true then
 			noteHandler.latestAccessibleNote = noteHandler.noteData[i]
 			return
 		end
